@@ -10,105 +10,149 @@ public class YXBot {
         System.out.println("What can I do for you?");
         System.out.println("____________________________________________________________");
         while (true) {
-            String input = sc.nextLine();
-            if (input.equals("bye")){
-                System.out.println("____________________________________________________________");
-                System.out.println("Bye. Hope to see you again soon!");
-                System.out.println("____________________________________________________________");
-                break;
-            }
-            else if (input.equals("list")){
-                if (counter == 0){
-                    System.out.println("Empty list");
-                }
-                else{
+            try {
+                String input = sc.nextLine();
+                if (input.equals("bye")) {
                     System.out.println("____________________________________________________________");
-                    System.out.println("Here are the tasks in your list:");
-                    for (int i = 0; i < counter; i++){
-                        System.out.println((i + 1) + "." + list[i].toString());
+                    System.out.println("Bye. Hope to see you again soon!");
+                    System.out.println("____________________________________________________________");
+                    break;
+                }
+                else if (input.equals("list")) {
+                    if (counter == 0) {
+                        System.out.println("Empty list");
+                    } else {
+                        System.out.println("____________________________________________________________");
+                        System.out.println("Here are the tasks in your list:");
+                        for (int i = 0; i < counter; i++) {
+                            System.out.println((i + 1) + "." + list[i].toString());
+                        }
+                        System.out.println("____________________________________________________________");
                     }
+                }
+                else if (input.equals("deadline")){
+                    throw new InvalidDeadlineFormatException();
+                }
+                else if (input.equals("todo")){
+                    throw new InvalidTodoFormatException();
+                }
+                else if (input.equals("event")){
+                    throw new InvalidEventFormatException();
+                }
+                else if (input.equals("mark")){
+                    throw new InvalidMarkFormatException();
+                }
+                else if (input.equals("unmark")){
+                    throw new InvalidUnmarkFormatException();
+                }
+                else if (input.startsWith("mark ")) {
+                    String[] parts = input.split(" ");
+                    if (parts.length != 2) {
+                        throw new InvalidMarkFormatException();
+                    }
+                    int taskNum = Integer.parseInt(parts[1]) - 1;
+                    if (taskNum < 0 || taskNum >= counter) {
+                        throw new InvalidTaskNumberException();
+                    }
+                    if (list[taskNum] == null) {
+                        throw new TaskDoesNotExistException();
+                    }
+                    else {
+                        list[taskNum].markAsDone();
+                        System.out.println("____________________________________________________________");
+                        System.out.println("Nice! I've marked this task as done:");
+                        System.out.println("   " + list[taskNum].toString());
+                        System.out.println("____________________________________________________________");
+                    }
+                } else if (input.startsWith("unmark ")) {
+                    String[] parts = input.split(" ");
+                    if (parts.length != 2) {
+                        throw new InvalidUnmarkFormatException();
+                    }
+                    int taskNum = Integer.parseInt(parts[1]) - 1;
+                    if (taskNum < 0 || taskNum >= counter) {
+                        throw new InvalidTaskNumberException();
+                    }
+                    if (list[taskNum] == null) {
+                        throw new TaskDoesNotExistException();
+                    }
+                    else {
+                        list[taskNum].markAsNotDone();
+                        System.out.println("____________________________________________________________");
+                        System.out.println("Ok, I've marked this task as not done yet:");
+                        System.out.println("  " + list[taskNum].toString());
+                        System.out.println("____________________________________________________________");
+                    }
+                } else if (input.startsWith(("deadline "))) {
+                    if (!input.contains(" /by ")) {
+                        throw new InvalidDeadlineFormatException();
+                    }
+                    String content = input.substring(9).trim();  // Remove "deadline "
+                    String[] parts = content.split(" /by ");
+                    if (parts.length != 2) {
+                        throw new InvalidDeadlineFormatException();
+                    }
+                    String description = parts[0].trim();
+                    String by = parts[1].trim();
+                    if (description.isEmpty() || by.isEmpty()){
+                        throw new InvalidDeadlineFormatException();
+                    }
+                    list[counter] = new Deadline(description, by);
+                    counter++;
+                    System.out.println("____________________________________________________________");
+                    System.out.println("Got it. I've added this task:");
+                    System.out.println("   " + list[counter - 1].toString());
+                    System.out.println("Now you have " + counter + " tasks in the list.");
+                    System.out.println("____________________________________________________________");
+                } else if (input.startsWith(("event "))) {
+                    if (!input.contains(" /from ") || !input.contains(" /to ")) {
+                        throw new InvalidEventFormatException();
+                    }
+                    int fromIndex = input.indexOf(" /from ");
+                    int toIndex = input.indexOf(" /to ");
+                    if (fromIndex >= toIndex) {
+                        throw new InvalidEventFormatException();
+                    }
+                    String content = input.substring(6).trim();
+                    String[] parts = content.split(" /from | /to ");
+                    if (parts.length != 3) {
+                        throw new InvalidEventFormatException();
+                    }
+                    String description = parts[0].trim();
+                    String from = parts[1].trim();
+                    String to = parts[2].trim();
+                    if (description.isEmpty() || from.isEmpty() || to.isEmpty()) {
+                        throw new InvalidEventFormatException();
+                    }
+                    list[counter] = new Event(description, from, to);
+                    counter++;
+                    System.out.println("____________________________________________________________");
+                    System.out.println("Got it. I've added this task:");
+                    System.out.println("   " + list[counter - 1].toString());
+                    System.out.println("Now you have " + counter + " tasks in the list.");
+                    System.out.println("____________________________________________________________");
+                } else if (input.startsWith(("todo "))) {
+                    String description = input.substring(5).trim();
+                    if (description.isEmpty()) {
+                        throw new InvalidTodoFormatException();
+                    }
+                    list[counter] = new Todo(description);
+                    counter++;
+                    System.out.println("____________________________________________________________");
+                    System.out.println("Got it. I've added this task:");
+                    System.out.println("   " + list[counter - 1].toString());
+                    System.out.println("Now you have " + counter + " tasks in the list.");
                     System.out.println("____________________________________________________________");
                 }
-            }
-            else if (input.startsWith("mark ")){
-                int taskNum = Integer.parseInt(input.split(" ")[1]) - 1;
-                if(list[taskNum] == null){
-                    System.out.println("____________________________________________________________");
-                    System.out.println("task does not exist");
-                    System.out.println("____________________________________________________________");
-                }
-                else{
-                    list[taskNum].markAsDone();
-                    System.out.println("____________________________________________________________");
-                    System.out.println("Nice! I've marked this task as done:");
-                    System.out.println("   " + list[taskNum].toString());
-                    System.out.println("____________________________________________________________");
+                else {
+                    throw new UnknownCommandException();
                 }
             }
-            else if (input.startsWith("unmark ")) {
-                int taskNum = Integer.parseInt(input.split(" ")[1]) - 1;
-                if (list[taskNum] == null) {
-                    System.out.println("____________________________________________________________");
-                    System.out.println("task does not exist");
-                    System.out.println("____________________________________________________________");
-                } else {
-                    list[taskNum].markAsNotDone();
-                    System.out.println("____________________________________________________________");
-                    System.out.println("Ok, I've marked this task as not done yet:");
-                    System.out.println("  " + list[taskNum].toString());
-                    System.out.println("____________________________________________________________");
-                }
+            catch (YXBotException e){
+                System.out.println(e.getMessage());
             }
-            else if (input.startsWith(("deadline "))){
-                String content = input.substring(9).trim();  // Remove "deadline "
-                String[] parts = content.split(" /by ");
-                if (parts.length < 2) {
-                    System.out.println("Invalid deadline format! Use: deadline [description] /by [time]");
-                }
-                String description = parts[0].trim();
-                String by = parts[1].trim();
-                list[counter] = new Deadline(description, by);
-                counter++;
-                System.out.println("____________________________________________________________");
-                System.out.println("Got it. I've added this task:");
-                System.out.println("   " + list[counter - 1].toString());
-                System.out.println("Now you have " + counter + " tasks in the list.");
-                System.out.println("____________________________________________________________");
-            }
-            else if (input.startsWith(("event "))){
-                String content = input.substring(6).trim();  // Remove "event "
-                String[] parts = content.split(" /from | /to ");
-                if (parts.length < 2) {
-                    System.out.println("Invalid event format! Use: event [description] /from [start] /to [end]");
-                }
-                String description = parts[0].trim();
-                String from = parts[1].trim();
-                String to = parts[2].trim();
-                list[counter] = new Event(description, from, to);
-                counter++;
-                System.out.println("____________________________________________________________");
-                System.out.println("Got it. I've added this task:");
-                System.out.println("   " + list[counter - 1].toString());
-                System.out.println("Now you have " + counter + " tasks in the list.");
-                System.out.println("____________________________________________________________");
-            }
-            else if (input.startsWith(("todo "))){
-                String description = input.substring(5).trim();
-                list[counter] = new Todo(description);
-                counter++;
-                System.out.println("____________________________________________________________");
-                System.out.println("Got it. I've added this task:");
-                System.out.println("   " + list[counter - 1].toString());
-                System.out.println("Now you have " + counter + " tasks in the list.");
-                System.out.println("____________________________________________________________");
-            }
-            else {
-                System.out.println("____________________________________________________________");
-                System.out.println("added: " + input);
-                Task t = new Task(input);
-                list[counter] = t;
-                counter++;
-                System.out.println("____________________________________________________________");
+            catch (NumberFormatException e){
+                System.out.println("Invalid task number!");
             }
         }
         sc.close();
