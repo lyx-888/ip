@@ -1,8 +1,9 @@
 import java.util.Scanner;
+import java.util.ArrayList;
 public class YXBot {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        Task[] list = new Task[100];
+        ArrayList<Task> list = new ArrayList<>();
         int counter = 0;
 
         System.out.println("____________________________________________________________");
@@ -19,13 +20,13 @@ public class YXBot {
                     break;
                 }
                 else if (input.equals("list")) {
-                    if (counter == 0) {
+                    if (list.isEmpty()) {
                         System.out.println("Empty list");
                     } else {
                         System.out.println("____________________________________________________________");
                         System.out.println("Here are the tasks in your list:");
-                        for (int i = 0; i < counter; i++) {
-                            System.out.println((i + 1) + "." + list[i].toString());
+                        for (int i = 0; i < list.size(); i++) {
+                            System.out.println((i + 1) + "." + list.get(i).toString());
                         }
                         System.out.println("____________________________________________________________");
                     }
@@ -45,6 +46,27 @@ public class YXBot {
                 else if (input.equals("unmark")){
                     throw new InvalidUnmarkFormatException();
                 }
+                else if (input.equals("delete")){
+                    throw new InvalidDeleteFormatException();
+                }
+                else if (input.startsWith("delete ")){
+                    String[] parts = input.split(" ");
+                    if (parts.length != 2) {
+                        throw new InvalidDeleteFormatException();
+                    }
+                    int taskNum = Integer.parseInt(parts[1]) - 1;
+                    if (taskNum < 0 || taskNum >= list.size()) {
+                        throw new InvalidTaskNumberException();
+                    }
+                    Task removedTask = list.remove(taskNum);
+                    counter--;
+                    System.out.println("____________________________________________________________");
+                    System.out.println("Noted. I've removed this task:");
+                    System.out.println("   " + removedTask.toString());
+                    System.out.println("Now you have " + list.size() + " tasks in the list.");
+                    System.out.println("____________________________________________________________");
+
+                }
                 else if (input.startsWith("mark ")) {
                     String[] parts = input.split(" ");
                     if (parts.length != 2) {
@@ -54,14 +76,14 @@ public class YXBot {
                     if (taskNum < 0 || taskNum >= counter) {
                         throw new InvalidTaskNumberException();
                     }
-                    if (list[taskNum] == null) {
+                    if (list.get(taskNum) == null) {
                         throw new TaskDoesNotExistException();
                     }
                     else {
-                        list[taskNum].markAsDone();
+                        list.get(taskNum).markAsDone();
                         System.out.println("____________________________________________________________");
                         System.out.println("Nice! I've marked this task as done:");
-                        System.out.println("   " + list[taskNum].toString());
+                        System.out.println("   " + list.get(taskNum).toString());
                         System.out.println("____________________________________________________________");
                     }
                 } else if (input.startsWith("unmark ")) {
@@ -73,14 +95,14 @@ public class YXBot {
                     if (taskNum < 0 || taskNum >= counter) {
                         throw new InvalidTaskNumberException();
                     }
-                    if (list[taskNum] == null) {
+                    if (list.get(taskNum) == null) {
                         throw new TaskDoesNotExistException();
                     }
                     else {
-                        list[taskNum].markAsNotDone();
+                        list.get(taskNum).markAsNotDone();
                         System.out.println("____________________________________________________________");
                         System.out.println("Ok, I've marked this task as not done yet:");
-                        System.out.println("  " + list[taskNum].toString());
+                        System.out.println("  " + list.get(taskNum).toString());
                         System.out.println("____________________________________________________________");
                     }
                 } else if (input.startsWith(("deadline "))) {
@@ -97,11 +119,11 @@ public class YXBot {
                     if (description.isEmpty() || by.isEmpty()){
                         throw new InvalidDeadlineFormatException();
                     }
-                    list[counter] = new Deadline(description, by);
+                    list.add(new Deadline(description, by));
                     counter++;
                     System.out.println("____________________________________________________________");
                     System.out.println("Got it. I've added this task:");
-                    System.out.println("   " + list[counter - 1].toString());
+                    System.out.println("   " + list.get(counter - 1).toString());
                     System.out.println("Now you have " + counter + " tasks in the list.");
                     System.out.println("____________________________________________________________");
                 } else if (input.startsWith(("event "))) {
@@ -124,11 +146,11 @@ public class YXBot {
                     if (description.isEmpty() || from.isEmpty() || to.isEmpty()) {
                         throw new InvalidEventFormatException();
                     }
-                    list[counter] = new Event(description, from, to);
+                    list.add(new Event(description, from, to));
                     counter++;
                     System.out.println("____________________________________________________________");
                     System.out.println("Got it. I've added this task:");
-                    System.out.println("   " + list[counter - 1].toString());
+                    System.out.println("   " + list.get(counter - 1).toString());
                     System.out.println("Now you have " + counter + " tasks in the list.");
                     System.out.println("____________________________________________________________");
                 } else if (input.startsWith(("todo "))) {
@@ -136,11 +158,11 @@ public class YXBot {
                     if (description.isEmpty()) {
                         throw new InvalidTodoFormatException();
                     }
-                    list[counter] = new Todo(description);
+                    list.add(new Todo(description));
                     counter++;
                     System.out.println("____________________________________________________________");
                     System.out.println("Got it. I've added this task:");
-                    System.out.println("   " + list[counter - 1].toString());
+                    System.out.println("   " + list.get(counter - 1).toString());
                     System.out.println("Now you have " + counter + " tasks in the list.");
                     System.out.println("____________________________________________________________");
                 }
