@@ -23,6 +23,9 @@ public class Task {
         return isDone;
     }
 
+    public String toFileFormat(){
+        return isDone ? "1" : "0";
+    }
     @Override
     public String toString(){
         return "[" + getStatusIcon() + "] " + description;
