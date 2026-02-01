@@ -6,44 +6,46 @@ import java.util.Scanner;
 import java.time.format.DateTimeParseException;
 
 public class Storage {
-    private static final String FILE_PATH = "./data/YXbot.txt";
-    private static final String FOLDER_PATH = "./data/";
+    private String filePath;
 
-    public static ArrayList<Task> loadTasks() throws CorruptedDataException {
+    public Storage(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public ArrayList<Task> load() throws CorruptedDataException {
         ArrayList<Task> tasks = new ArrayList<>();
 
         try {
-            File folder = new File(FOLDER_PATH);
-            if (!folder.exists()) {
+            File file = new File(filePath);
+            File folder = file.getParentFile();
+
+            if (folder != null && !folder.exists()) {
                 folder.mkdirs();
             }
 
-            File file = new File(FILE_PATH);
             if (!file.exists()) {
                 file.createNewFile();
-                return tasks; // Empty list for new file
+                return tasks;
             }
 
-            Scanner sc = new Scanner(file);
-            while (sc.hasNextLine()) {
-                String line = sc.nextLine().trim();
-                if (!line.isEmpty()) {
-                    Task task = parseTask(line);
-                    if (task != null) {
+            try (Scanner sc = new Scanner(file)) {
+                while (sc.hasNextLine()) {
+                    String line = sc.nextLine().trim();
+                    if (!line.isEmpty()) {
+                        Task task = parseTask(line);
                         tasks.add(task);
                     }
                 }
             }
-            sc.close();
 
-        } catch (IOException e){
-            System.out.println("Error loading tasks: " + e.getMessage());
+        } catch (IOException e) {
+            throw new CorruptedDataException("Error loading tasks: " + e.getMessage());
         }
 
         return tasks;
     }
 
-    private static Task parseTask(String line) throws CorruptedDataException{
+    private Task parseTask(String line) throws CorruptedDataException {
         try{
             String[] parts = line.split(" \\| ");
 
@@ -80,23 +82,24 @@ public class Storage {
             throw new CorruptedDataException("Error parsing task: " + line);
         }
     }
-    public static void saveTasks(ArrayList<Task> tasks) {
+
+    public void save(ArrayList<Task> tasks) {
         try {
-            File folder = new File(FOLDER_PATH);
-            if (!folder.exists()) {
+            File file = new File(filePath);
+            File folder = file.getParentFile();
+
+            if (folder != null && !folder.exists()) {
                 folder.mkdirs();
             }
 
-            FileWriter writer = new FileWriter(FILE_PATH);
-            for (Task task : tasks) {
-                writer.write(task.toFileFormat() + "\n");
+            try (FileWriter writer = new FileWriter(file)) {
+                for (Task task : tasks) {
+                    writer.write(task.toFileFormat() + "\n");
+                }
             }
-            writer.close();
 
         } catch (IOException e) {
             System.out.println("Error saving tasks: " + e.getMessage());
         }
     }
 }
-
-
