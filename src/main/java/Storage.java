@@ -3,12 +3,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.time.format.DateTimeParseException;
 
 public class Storage {
     private static final String FILE_PATH = "./data/YXbot.txt";
     private static final String FOLDER_PATH = "./data/";
 
-    public static ArrayList<Task> loadTasks() {
+    public static ArrayList<Task> loadTasks() throws CorruptedDataException {
         ArrayList<Task> tasks = new ArrayList<>();
 
         try {
@@ -42,7 +43,7 @@ public class Storage {
         return tasks;
     }
 
-    private static Task parseTask(String line){
+    private static Task parseTask(String line) throws CorruptedDataException{
         try{
             String[] parts = line.split(" \\| ");
 
@@ -73,9 +74,10 @@ public class Storage {
 
             return task;
 
+        }catch (DateTimeParseException e) {
+            throw new CorruptedDataException("Invalid date format in task: " + line);
         } catch (Exception e) {
-            System.out.println("Error parsing task: " + line);
-            return null;
+            throw new CorruptedDataException("Error parsing task: " + line);
         }
     }
     public static void saveTasks(ArrayList<Task> tasks) {
