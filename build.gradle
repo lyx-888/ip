@@ -34,8 +34,12 @@ application {
 shadowJar {
     archiveBaseName = "duke"
     archiveClassifier = null
+    archiveFileName = 'YXBot.jar'
 }
 
 run{
     standardInput = System.in
 }
+
+
+
