@@ -4,10 +4,21 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+/**
+ * Parses user input into Command objects.
+ * Handles validation of command syntax.
+ */
 public class Parser {
     private static final DateTimeFormatter DATE_INPUT_FORMAT =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
 
+    /**
+     * Parses a user input string into a Command object.
+     *
+     * @param input The user input string
+     * @return Corresponding Command object
+     * @throws YXBotException if input format is invalid
+     */
     public static Command parse(String input) throws YXBotException {
         if (input.equals("bye")) {
             return new Command(CommandType.BYE);

@@ -2,13 +2,24 @@ package yxbot;
 
 import java.util.Scanner;
 
+/**
+ * Handles all user interface interactions.
+ * Manages input/output operations with the user.
+ */
 public class Ui {
     private Scanner scanner;
 
+    /**
+     * Constructs a new Ui instance.
+     * Initializes scanner for reading user input.
+     */
     public Ui() {
         this.scanner = new Scanner(System.in);
     }
 
+    /**
+     * Displays the welcome message.
+     */
     public void showWelcome() {
         showLine();
         System.out.println("Hello! I'm YXBot");
@@ -16,20 +27,37 @@ public class Ui {
         showLine();
     }
 
+    /**
+     * Displays the goodbye message.
+     */
     public void showGoodbye() {
         showLine();
         System.out.println("Bye. Hope to see you again soon!");
         showLine();
     }
 
+    /**
+     * Displays a horizontal line separator.
+     */
     public void showLine() {
         System.out.println("____________________________________________________________");
     }
 
+    /**
+     * Displays an error message to the user.
+     *
+     * @param message The error message to display
+     */
     public void showError(String message) {
         System.out.println(message);
     }
 
+    /**
+     * Displays confirmation that a task was added.
+     *
+     * @param task The task that was added
+     * @param totalTasks The new total number of tasks
+     */
     public void showTaskAdded(Task task, int totalTasks) {
         showLine();
         System.out.println("Got it. I've added this task:");

@@ -6,14 +6,29 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.time.format.DateTimeParseException;
-
+/**
+ * Handles loading and saving tasks to/from a data file.
+ * Manages file operations and data persistence for the chatbot.
+ */
 public class Storage {
     private String filePath;
 
+    /**
+     * Constructs a Storage instance with the specified file path.
+     *
+     * @param filePath Path to the data file
+     */
     public Storage(String filePath) {
         this.filePath = filePath;
     }
 
+
+    /**
+     * Loads tasks from the data file.
+     *
+     * @return ArrayList of loaded tasks
+     * @throws CorruptedDataException if file cannot be read or contains invalid data
+     */
     public ArrayList<Task> load() throws CorruptedDataException {
         ArrayList<Task> tasks = new ArrayList<>();
 
@@ -47,6 +62,13 @@ public class Storage {
         return tasks;
     }
 
+    /**
+     * Parses a single line from the data file into a Task object.
+     *
+     * @param line The line to parse
+     * @return Parsed Task object
+     * @throws CorruptedDataException if line format is invalid
+     */
     private Task parseTask(String line) throws CorruptedDataException {
         try{
             String[] parts = line.split(" \\| ");
@@ -85,6 +107,11 @@ public class Storage {
         }
     }
 
+    /**
+     * Saves tasks to the data file.
+     *
+     * @param tasks The list of tasks to save
+     */
     public void save(ArrayList<Task> tasks) {
         try {
             File file = new File(filePath);
