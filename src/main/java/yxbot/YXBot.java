@@ -101,6 +101,10 @@ public class YXBot {
                 storage.save(tasks.getAllTasks());
                 return false;
 
+            case FIND:
+                command.execute(tasks, ui, storage);
+                return false;
+
             default:
                 throw new UnknownCommandException();
         }

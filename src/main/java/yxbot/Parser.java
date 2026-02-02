@@ -36,6 +36,8 @@ public class Parser {
             return parseDeadline(input);
         } else if (input.startsWith("event ")) {
             return parseEvent(input);
+        } else if (input.startsWith("find ")) {
+            return parseFind(input);  // ADD THIS LINE
         } else {
             throw new UnknownCommandException();
         }
@@ -146,5 +148,18 @@ public class Parser {
         }
 
         return new Command(CommandType.EVENT, new Event(description, from, to));
+    }
+
+    private static Command parseFind(String input) throws InvalidFindFormatException {
+        if (input.length() <= 5) {
+            throw new InvalidFindFormatException();
+        }
+
+        String keyword = input.substring(5).trim();
+        if (keyword.isEmpty()) {
+            throw new InvalidFindFormatException();
+        }
+
+        return new FindCommand(keyword);
     }
 }
