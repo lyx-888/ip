@@ -1,5 +1,7 @@
+package yxbot;
+
 public class TaskDoesNotExistException extends YXBotException {
     public TaskDoesNotExistException(){
-        super("Task does not exist!");
+        super("yxbot.Task does not exist!");
     }
 }

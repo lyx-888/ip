@@ -1,3 +1,5 @@
+package yxbot;
+
 public class Command {
     private CommandType type;
     private Integer index;

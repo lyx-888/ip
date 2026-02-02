@@ -1,7 +1,8 @@
+package yxbot;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.Date;
 
 public class Deadline extends Task {
     protected LocalDateTime by;
