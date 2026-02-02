@@ -9,6 +9,6 @@ public class TaskDoesNotExistException extends YXBotException {
      * Constructs a new TaskDoesNotExistException with a default message.
      */
     public TaskDoesNotExistException(){
-        super("yxbot.Task does not exist!");
+        super("Task does not exist!");
     }
 }

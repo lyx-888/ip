@@ -21,6 +21,7 @@ public class Deadline extends Task {
 
     @Override
     public String toFileFormat(){
-        return "D | " + super.toFileFormat() + " | " + description + " | " + by.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+        return "D | " + super.toFileFormat() + " | " + description + " | " +
+                by.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
     }
 }
