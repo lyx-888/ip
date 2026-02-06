@@ -30,6 +30,18 @@ public class YXBot {
         }
     }
 
+    public Storage getStorage() {
+        return storage;
+    }
+
+    public TaskList getTasks() {
+        return tasks;
+    }
+
+    public Ui getUi() {
+        return ui;
+    }
+
     /**
      * Starts the chatbot's main event loop.
      * Processes user commands until "bye" command is received.
@@ -59,7 +71,7 @@ public class YXBot {
      * @return true if the command is "bye", false otherwise
      * @throws YXBotException if command execution fails
      */
-    private boolean executeCommand(Command command) throws YXBotException {
+    public boolean executeCommand(Command command) throws YXBotException {
         switch (command.getType()) {
             case BYE:
                 return true;
