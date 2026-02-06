@@ -45,6 +45,5 @@ public class Command {
         throw new YXBotException("Execute method must be overridden");
     }
 
-
 }
 
