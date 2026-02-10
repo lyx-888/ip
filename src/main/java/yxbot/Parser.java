@@ -20,6 +20,8 @@ public class Parser {
      * @throws YXBotException if input format is invalid
      */
     public static Command parse(String input) throws YXBotException {
+        assert input != null : "Input string cannot be null";
+
         if (input.equals("bye")) {
             return new Command(CommandType.BYE);
         } else if (input.equals("list")) {
@@ -37,13 +39,15 @@ public class Parser {
         } else if (input.startsWith("event ")) {
             return parseEvent(input);
         } else if (input.startsWith("find ")) {
-            return parseFind(input);  // ADD THIS LINE
+            return parseFind(input);
         } else {
             throw new UnknownCommandException();
         }
     }
 
     private static Command parseMark(String input) throws InvalidMarkFormatException {
+        assert input != null : "Mark input cannot be null";
+
         String[] parts = input.split(" ");
         if (parts.length != 2) {
             throw new InvalidMarkFormatException();
@@ -57,6 +61,8 @@ public class Parser {
     }
 
     private static Command parseUnmark(String input) throws InvalidUnmarkFormatException {
+        assert input != null : "Unmark input cannot be null";
+
         String[] parts = input.split(" ");
         if (parts.length != 2) {
             throw new InvalidUnmarkFormatException();
@@ -70,6 +76,8 @@ public class Parser {
     }
 
     private static Command parseDelete(String input) throws InvalidDeleteFormatException {
+        assert input != null : "Delete input cannot be null";
+
         String[] parts = input.split(" ");
         if (parts.length != 2) {
             throw new InvalidDeleteFormatException();
@@ -83,6 +91,8 @@ public class Parser {
     }
 
     private static Command parseTodo(String input) throws InvalidTodoFormatException {
+        assert input != null : "Todo input cannot be null";
+
         String description = input.substring(5).trim();
         if (description.isEmpty()) {
             throw new InvalidTodoFormatException();
@@ -91,6 +101,8 @@ public class Parser {
     }
 
     private static Command parseDeadline(String input) throws InvalidDeadlineFormatException {
+        assert input != null : "Deadline input cannot be null";
+
         if (!input.contains(" /by ")) {
             throw new InvalidDeadlineFormatException();
         }
@@ -117,6 +129,8 @@ public class Parser {
     }
 
     private static Command parseEvent(String input) throws InvalidEventFormatException {
+        assert input != null : "Event input cannot be null";
+
         if (!input.contains(" /from ") || !input.contains(" /to ")) {
             throw new InvalidEventFormatException();
         }
@@ -151,6 +165,8 @@ public class Parser {
     }
 
     private static Command parseFind(String input) throws InvalidFindFormatException {
+        assert input != null : "Find input cannot be null";
+
         if (input.length() <= 5) {
             throw new InvalidFindFormatException();
         }
