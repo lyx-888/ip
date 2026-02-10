@@ -72,71 +72,92 @@ public class YXBot {
      * @throws YXBotException if command execution fails
      */
     public boolean executeCommand(Command command) throws YXBotException {
-        assert command != null : "Command should not be null";
-
         switch (command.getType()) {
-        case BYE:
-            return true;
+            case BYE:
+                return true;
 
-        case LIST:
-            assert tasks != null : "TaskList should be initialized";
-            ui.showTaskList(tasks);
-            return false;
+            case LIST:
+                ui.showTaskList(tasks);
+                return false;
 
-        case MARK:
-            int markIndex = command.getIndex();
-            validateIndex(markIndex);
-            Task markTask = tasks.get(markIndex);
-            assert markTask != null : "Task at index should not be null";
+            case MARK:
+                handleMarking(command.getIndex(), true);
+                return false;
 
-            markTask.markAsDone();
-            ui.showTaskMarked(markTask, true);
-            storage.save(tasks.getAllTasks());
-            return false;
+            case UNMARK:
+                handleMarking(command.getIndex(), false);
+                return false;
 
-        case UNMARK:
-            int unmarkIndex = command.getIndex();
-            validateIndex(unmarkIndex);
-            Task unmarkTask = tasks.get(unmarkIndex);
-            assert unmarkTask != null : "Task at index should not be null";
+            case DELETE:
+                handleDelete(command.getIndex());
+                return false;
 
-            unmarkTask.markAsNotDone();
-            ui.showTaskMarked(unmarkTask, false);
-            storage.save(tasks.getAllTasks());
-            return false;
+            case TODO:
+            case DEADLINE:
+            case EVENT:
+                handleAddTask(command.getTask());
+                return false;
 
-        case DELETE:
-            int deleteIndex = command.getIndex();
-            validateIndex(deleteIndex);
-            assert deleteIndex < tasks.size() : "Delete index should be within bounds";
+            case FIND:
+                command.execute(tasks, ui, storage);
+                return false;
 
-            Task deletedTask = tasks.delete(deleteIndex);
-            assert deletedTask != null : "Deleted task should not be null";
-
-            ui.showTaskDeleted(deletedTask, tasks.size());
-            storage.save(tasks.getAllTasks());
-            return false;
-
-        case TODO:
-        case DEADLINE:
-        case EVENT:
-            Task newTask = command.getTask();
-            assert newTask != null : "New task should not be null";
-            assert newTask.description != null && !newTask.description.isEmpty()
-                    : "Task description should not be empty";
-
-            tasks.add(newTask);
-            ui.showTaskAdded(newTask, tasks.size());
-            storage.save(tasks.getAllTasks());
-            return false;
-
-        case FIND:
-            command.execute(tasks, ui, storage);
-            return false;
-
-        default:
-            throw new UnknownCommandException();
+            default:
+                throw new UnknownCommandException();
         }
+    }
+
+    /**
+     * Marks/unmarks the task at the given index.
+     *
+     * @param index 0-based task index
+     * @param markDone true to mark as done, false to mark as not done
+     * @throws YXBotException if index is invalid
+     */
+    private void handleMarking(int index, boolean markDone) throws YXBotException {
+        validateIndex(index);
+
+        Task task = tasks.get(index);
+        if (markDone) {
+            task.markAsDone();
+        } else {
+            task.markAsNotDone();
+        }
+
+        ui.showTaskMarked(task, markDone);
+        saveTasks();
+    }
+
+    /**
+     * Deletes the task at the given index.
+     *
+     * @param index 0-based task index
+     * @throws YXBotException if index is invalid
+     */
+    private void handleDelete(int index) throws YXBotException {
+        validateIndex(index);
+
+        Task deletedTask = tasks.delete(index);
+        ui.showTaskDeleted(deletedTask, tasks.size());
+        saveTasks();
+    }
+
+    /**
+     * Adds a new task to the list and persists the updated list.
+     *
+     * @param task task to add
+     */
+    private void handleAddTask(Task task) {
+        tasks.add(task);
+        ui.showTaskAdded(task, tasks.size());
+        saveTasks();
+    }
+
+    /**
+     * Saves current tasks to storage.
+     */
+    private void saveTasks() {
+        storage.save(tasks.getAllTasks());
     }
 
     /**
@@ -147,8 +168,6 @@ public class YXBot {
      * @throws TaskDoesNotExistException if task at index is null
      */
     private void validateIndex(int index) throws YXBotException {
-        assert tasks != null : "TaskList should be initialized when validating index";
-
         if (index < 0 || index >= tasks.size()) {
             throw new InvalidTaskNumberException();
         }
