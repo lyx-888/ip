@@ -7,6 +7,7 @@ public class Todo extends Task{
 
     @Override
     public String toString() {
+        assert description != null : "Todo description should not be null";
         return "[T]" + super.toString();
     }
 

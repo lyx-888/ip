@@ -19,6 +19,8 @@ public class Storage {
      * @param filePath Path to the data file
      */
     public Storage(String filePath) {
+        assert filePath != null && !filePath.isEmpty() :
+                "File path cannot be null or empty";
         this.filePath = filePath;
     }
 
@@ -70,12 +72,20 @@ public class Storage {
      * @throws CorruptedDataException if line format is invalid
      */
     private Task parseTask(String line) throws CorruptedDataException {
+        assert line != null && !line.trim().isEmpty() :
+                "Line to parse cannot be null or empty";
+
         try{
             String[] parts = line.split(" \\| ");
+            assert parts.length >= 3 :
+                    "Task line should have at least 3 parts: " + line;
 
             String type = parts[0];
             boolean isDone = parts[1].equals("1");
             String description = parts[2];
+
+            assert description != null && !description.isEmpty() :
+                    "Task description cannot be empty: " + line;
 
             Task task = null;
 

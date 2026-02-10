@@ -28,6 +28,13 @@ public class FindCommand extends Command {
      */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) {
+        assert tasks != null : "TaskList cannot be null";
+        assert ui != null : "UI cannot be null";
+
+        String keyword = this.getKeyword();
+        assert keyword != null && !keyword.isEmpty() :
+                "Search keyword cannot be null or empty";
+
         ui.showLine();
 
         int matchCount = 0;
@@ -35,6 +42,9 @@ public class FindCommand extends Command {
 
         for (int i = 0; i < tasks.size(); i++) {
             Task task = tasks.get(i);
+            assert task != null : "Task in list should not be null";
+            assert task.description != null : "Task description should not be null";
+
             if (task.description.toLowerCase().contains(keyword.toLowerCase())) {
                 if (matchCount == 0) {
                     System.out.println("Here are the matching tasks in your list:");
