@@ -20,26 +20,40 @@ public class Parser {
      * @throws YXBotException if input format is invalid
      */
     public static Command parse(String input) throws YXBotException {
-        if (input.equals("bye")) {
-            return new Command(CommandType.BYE);
-        } else if (input.equals("list")) {
-            return new Command(CommandType.LIST);
-        } else if (input.startsWith("mark ")) {
-            return parseMark(input);
-        } else if (input.startsWith("unmark ")) {
-            return parseUnmark(input);
-        } else if (input.startsWith("delete ")) {
-            return parseDelete(input);
-        } else if (input.startsWith("todo ")) {
-            return parseTodo(input);
-        } else if (input.startsWith("deadline ")) {
-            return parseDeadline(input);
-        } else if (input.startsWith("event ")) {
-            return parseEvent(input);
-        } else if (input.startsWith("find ")) {
-            return parseFind(input);  // ADD THIS LINE
-        } else {
-            throw new UnknownCommandException();
+        String commandWord = input.contains(" ")
+                ? input.substring(0, input.indexOf(" "))
+                : input;
+
+        switch (commandWord) {
+            case "bye":
+                return new Command(CommandType.BYE);
+
+            case "list":
+                return new Command(CommandType.LIST);
+
+            case "mark":
+                return parseMark(input);
+
+            case "unmark":
+                return parseUnmark(input);
+
+            case "delete":
+                return parseDelete(input);
+
+            case "todo":
+                return parseTodo(input);
+
+            case "deadline":
+                return parseDeadline(input);
+
+            case "event":
+                return parseEvent(input);
+
+            case "find":
+                return parseFind(input);
+
+            default:
+                throw new UnknownCommandException();
         }
     }
 
