@@ -36,4 +36,8 @@ public class TaskList {
     public ArrayList<Task> getAllTasks() {
         return tasks;
     }
+
+    public boolean contains(Task task) {
+        return tasks.contains(task);
+    }
 }

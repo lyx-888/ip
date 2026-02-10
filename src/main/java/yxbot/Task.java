@@ -1,5 +1,7 @@
 package yxbot;
 
+import java.util.Objects;
+
 /**
  * Base class for all types of tasks.
  * Provides common functionality for task description and completion status.
@@ -54,4 +56,22 @@ public class Task {
     public String toString(){
         return "[" + getStatusIcon() + "] " + description;
     }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (other == null || getClass() != other.getClass()) {
+            return false;
+        }
+        Task otherTask = (Task) other;
+        return Objects.equals(description, otherTask.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getClass(), description);
+    }
+
 }

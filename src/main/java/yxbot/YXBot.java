@@ -147,7 +147,12 @@ public class YXBot {
      *
      * @param task task to add
      */
-    private void handleAddTask(Task task) {
+    private void handleAddTask(Task task) throws YXBotException {
+
+        if (tasks.contains(task)) {
+            throw new DuplicateTaskException();
+        }
+
         tasks.add(task);
         ui.showTaskAdded(task, tasks.size());
         saveTasks();
