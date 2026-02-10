@@ -38,7 +38,6 @@ public class FindCommand extends Command {
         ui.showLine();
 
         int matchCount = 0;
-        String keyword = this.getKeyword();
 
         for (int i = 0; i < tasks.size(); i++) {
             Task task = tasks.get(i);
