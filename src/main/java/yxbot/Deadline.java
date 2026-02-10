@@ -1,5 +1,6 @@
 package yxbot;
 
+import java.util.Objects;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -23,5 +24,19 @@ public class Deadline extends Task {
     public String toFileFormat(){
         return "D | " + super.toFileFormat() + " | " + description + " | " +
                 by.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!super.equals(other)) {
+            return false;
+        }
+        Deadline o = (Deadline) other;
+        return Objects.equals(by, o.by);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getClass(), description, by);
     }
 }
