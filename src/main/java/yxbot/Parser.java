@@ -26,9 +26,15 @@ public class Parser {
 
         switch (commandWord) {
             case "bye":
+                if (!input.equals("bye")) {
+                    throw new UnknownCommandException();
+                }
                 return new Command(CommandType.BYE);
 
             case "list":
+                if (!input.equals("list")) {
+                    throw new UnknownCommandException();
+                }
                 return new Command(CommandType.LIST);
 
             case "mark":
@@ -97,6 +103,10 @@ public class Parser {
     }
 
     private static Command parseTodo(String input) throws InvalidTodoFormatException {
+        if (input.length() <= 4 || !input.startsWith("todo ")) {
+            throw new InvalidTodoFormatException();
+        }
+
         String description = input.substring(5).trim();
         if (description.isEmpty()) {
             throw new InvalidTodoFormatException();
@@ -130,7 +140,7 @@ public class Parser {
         return new Command(CommandType.DEADLINE, new Deadline(description, by));
     }
 
-    private static Command parseEvent(String input) throws InvalidEventFormatException {
+    private static Command parseEvent(String input) throws YXBotException {
         if (!input.contains(" /from ") || !input.contains(" /to ")) {
             throw new InvalidEventFormatException();
         }
@@ -155,8 +165,11 @@ public class Parser {
         }
 
         try {
-            LocalDateTime.parse(from, DATE_INPUT_FORMAT);
-            LocalDateTime.parse(to, DATE_INPUT_FORMAT);
+            LocalDateTime dtFrom = LocalDateTime.parse(from, DATE_INPUT_FORMAT);
+            LocalDateTime dtTo = LocalDateTime.parse(to, DATE_INPUT_FORMAT);
+            if (!dtTo.isAfter(dtFrom)) {
+                throw new InvalidEventTimeRangeException();
+            }
         } catch (DateTimeParseException e) {
             throw new InvalidEventFormatException();
         }

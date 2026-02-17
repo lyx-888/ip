@@ -37,6 +37,12 @@ public class MainWindow extends AnchorPane {
     /** Injects the YXBot instance */
     public void setYxbot(YXBot y) {
         yxbot = y;
+
+        for (String warning : yxbot.getStorage().getLoadWarnings()) {
+            dialogContainer.getChildren().add(
+                    DialogBox.getYxbotDialog(warning, yxbotImage)
+            );
+        }
     }
 
     /**

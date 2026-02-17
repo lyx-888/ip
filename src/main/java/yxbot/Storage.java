@@ -12,6 +12,7 @@ import java.time.format.DateTimeParseException;
  */
 public class Storage {
     private String filePath;
+    private final ArrayList<String> loadWarnings = new ArrayList<>();
 
     /**
      * Constructs a Storage instance with the specified file path.
@@ -33,6 +34,7 @@ public class Storage {
      */
     public ArrayList<Task> load() throws CorruptedDataException {
         ArrayList<Task> tasks = new ArrayList<>();
+        loadWarnings.clear();
 
         try {
             File file = new File(filePath);
@@ -48,11 +50,19 @@ public class Storage {
             }
 
             try (Scanner sc = new Scanner(file)) {
+                int lineNo = 0;
                 while (sc.hasNextLine()) {
+                    lineNo++;
                     String line = sc.nextLine().trim();
-                    if (!line.isEmpty()) {
+                    if (line.isEmpty()) {
+                        continue;
+                    }
+
+                    try {
                         Task task = parseTask(line);
                         tasks.add(task);
+                    }  catch (Exception e) {
+                        loadWarnings.add("Skipped unreadable line " + lineNo + ": " + line);
                     }
                 }
             }
@@ -72,46 +82,58 @@ public class Storage {
      * @throws CorruptedDataException if line format is invalid
      */
     private Task parseTask(String line) throws CorruptedDataException {
-        assert line != null && !line.trim().isEmpty() :
-                "Line to parse cannot be null or empty";
+        if (line == null || line.trim().isEmpty()) {
+            throw new CorruptedDataException("Empty line");
+        }
 
-        try{
-            String[] parts = line.split(" \\| ");
-            assert parts.length >= 3 :
-                    "Task line should have at least 3 parts: " + line;
+        String[] parts = line.split(" \\| ");
 
-            String type = parts[0];
-            boolean isDone = parts[1].equals("1");
-            String description = parts[2];
+        if (parts.length < 3) {
+            throw new CorruptedDataException("Not enough fields");
+        }
 
-            assert description != null && !description.isEmpty() :
-                    "Task description cannot be empty: " + line;
+        String type = parts[0];
+        boolean isDone = "1".equals(parts[1]);
+        String description = parts[2];
 
-            Task task = null;
+        if (description == null || description.trim().isEmpty()) {
+            throw new CorruptedDataException("Empty description");
+        }
+
+        try {
+            Task task;
 
             switch (type) {
                 case "T":
                     task = new Todo(description);
                     break;
-                case "D":
-                    String by = parts[3];
-                    task = new Deadline(description, by);
-                    break;
-                case "E":
-                    String from = parts[3];
-                    String to = parts[4];
-                    task = new Event(description, from, to);
-                    break;
-            }
 
-            if (task != null && isDone) {
+                case "D":
+                    if (parts.length < 4) {
+                        throw new CorruptedDataException("Missing deadline date: " + line);
+                    }
+                    task = new Deadline(description, parts[3]);
+                    break;
+
+                case "E":
+                    if (parts.length < 5) {
+                        throw new CorruptedDataException("Missing event time fields: " + line);
+                    }
+                    task = new Event(description, parts[3], parts[4]);
+                    break;
+
+                default:
+                    throw new CorruptedDataException("Unknown task type: " + type);
+                }
+
+            if (isDone) {
                 task.markAsDone();
             }
 
             return task;
 
-        }catch (DateTimeParseException e) {
-            throw new CorruptedDataException("Invalid date format in task: " + line);
+        } catch (DateTimeParseException e) {
+            throw new CorruptedDataException("Invalid date format: " + line);
         } catch (Exception e) {
             throw new CorruptedDataException("Error parsing task: " + line);
         }
@@ -140,5 +162,8 @@ public class Storage {
         } catch (IOException e) {
             System.out.println("Error saving tasks: " + e.getMessage());
         }
+    }
+    public ArrayList<String> getLoadWarnings() {
+        return new ArrayList<>(loadWarnings);
     }
 }
