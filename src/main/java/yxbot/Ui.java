@@ -68,6 +68,12 @@ public class Ui {
         showLine();
     }
 
+    /**
+     * Displays confirmation that a task was deleted.
+     *
+     * @param task The task that was removed
+     * @param totalTasks The new total number of tasks after deletion
+     */
     public void showTaskDeleted(Task task, int totalTasks) {
         showLine();
         System.out.println("Noted. I've removed this task:");
@@ -77,6 +83,12 @@ public class Ui {
         showLine();
     }
 
+    /**
+     * Displays confirmation that a task's completion status has been changed.
+     *
+     * @param task The task whose status was changed
+     * @param isDone The new completion status (true for done, false for not done)
+     */
     public void showTaskMarked(Task task, boolean isDone) {
         showLine();
         if (isDone) {
@@ -88,6 +100,12 @@ public class Ui {
         showLine();
     }
 
+    /**
+     * Displays the complete list of tasks with their indices.
+     * If the task list is empty, displays "Empty list" instead.
+     *
+     * @param tasks The TaskList containing all tasks to display
+     */
     public void showTaskList(TaskList tasks) {
         if (tasks.isEmpty()) {
             System.out.println("Empty list");
@@ -102,10 +120,20 @@ public class Ui {
         }
     }
 
+    /**
+     * Reads and returns the next line of user input from the console.
+     * The input is automatically trimmed of leading and trailing whitespace.
+     *
+     * @return The trimmed user input string
+     */
     public String readCommand() {
         return scanner.nextLine().trim();
     }
 
+    /**
+     * Closes the scanner and releases any system resources associated with it.
+     * Should be called when the UI is no longer needed.
+     */
     public void close() {
         scanner.close();
     }

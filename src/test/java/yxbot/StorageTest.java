@@ -21,7 +21,6 @@ public class StorageTest {
         Path filePath = tempDir.resolve("data").resolve("tasks.txt");
         Storage storage = new Storage(filePath.toString());
 
-        // file shouldn't exist before load()
         assertFalse(Files.exists(filePath));
 
         ArrayList<Task> tasks = storage.load();
@@ -29,7 +28,6 @@ public class StorageTest {
         assertNotNull(tasks);
         assertTrue(tasks.isEmpty());
 
-        // load() should create the file (and parent folder)
         assertTrue(Files.exists(filePath));
     }
 
@@ -43,8 +41,8 @@ public class StorageTest {
         Task b = new Task("b");
         b.markAsDone();
 
-        tasks.add(a); // should write 0
-        tasks.add(b); // should write 1
+        tasks.add(a);
+        tasks.add(b);
 
         storage.save(tasks);
 
