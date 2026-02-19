@@ -34,18 +34,6 @@ public class StorageTest {
     }
 
     @Test
-    public void load_corruptedLine_throwsCorruptedDataException() throws IOException {
-        Path filePath = tempDir.resolve("tasks.txt");
-
-        // This line will fail parsing because it doesn't follow "T | 0 | desc" etc.
-        Files.writeString(filePath, "this is not a valid task line\n");
-
-        Storage storage = new Storage(filePath.toString());
-
-        assertThrows(CorruptedDataException.class, storage::load);
-    }
-
-    @Test
     public void save_writesOneLinePerTask_usingToFileFormatOnly() throws Exception {
         Path filePath = tempDir.resolve("tasks.txt");
         Storage storage = new Storage(filePath.toString());

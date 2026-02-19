@@ -72,14 +72,7 @@ public class MainWindow extends AnchorPane {
     private String getResponse(String input) {
         try {
             if (input.equalsIgnoreCase("bye")) {
-                new Thread(() -> {
-                    try {
-                        Thread.sleep(1000);
-                        System.exit(0);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }).start();
+                scheduleExit();
                 return "Bye. Hope to see you again soon!";
             }
 
@@ -116,4 +109,18 @@ public class MainWindow extends AnchorPane {
             return "Error: " + e.getMessage();
         }
     }
+
+    private void scheduleExit() {
+        new Thread(this::exitAfterDelay).start();
+    }
+
+    private void exitAfterDelay() {
+        try {
+            Thread.sleep(1000);
+            System.exit(0);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
