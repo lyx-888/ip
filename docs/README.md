@@ -1,30 +1,163 @@
-# Duke User Guide
+# YXBot User Guide
 
-// Update the title above to match the actual product name
+YXBot is a task manager chatbot that allows you to manage tasks efficiently using simple commands.
 
-// Product screenshot goes here
+---
 
-// Product intro goes here
+## Quick Start
 
-## Adding deadlines
+### Prerequisites
 
-// Describe the action and its outcome.
+- Java 17 or above must be installed on your computer.
+- Ensure `java` is available in your system PATH.
 
-// Give examples of usage
+---
 
-Example: `keyword (optional arguments)`
+### Running the JAR File
 
-// A description of the expected outcome goes here
+1. Download the `YXBot.jar` file.
+2. Open a terminal (Command Prompt / PowerShell / Terminal).
+3. Navigate to the folder containing the JAR file.
+
+Example:
 
 ```
-expected output
+cd path/to/your/jar/folder
 ```
 
-## Feature ABC
+4. Run the following command:
 
-// Feature details
+```
+java -jar YXBot.jar
+```
 
+5. The YXBot GUI window will launch.
 
-## Feature XYZ
+## Features
 
-// Feature details
+---
+## list
+
+Displays all tasks in the list.
+
+**Format**
+```
+list
+```
+
+---
+
+## todo
+
+Adds a todo task.
+
+**Format**
+```
+todo DESCRIPTION
+```
+
+**Example**
+```
+todo finish assignment
+```
+
+---
+
+## deadline
+
+Adds a task with a deadline.
+
+**Format**
+```
+deadline DESCRIPTION /by yyyy-MM-dd HHmm
+```
+
+**Example**
+```
+deadline submit report /by 2026-12-20 2359
+```
+
+Date must follow `yyyy-MM-dd HHmm`.
+
+---
+
+## event
+
+Adds a task with start and end time.
+
+**Format**
+```
+event DESCRIPTION /from yyyy-MM-dd HHmm /to yyyy-MM-dd HHmm
+```
+
+**Example**
+```
+event project meeting /from 2026-12-12 1400 /to 2026-12-12 1600
+```
+
+- End time must be after start time.
+- Date format: `yyyy-MM-dd HHmm`.
+
+---
+
+## mark
+
+Marks a task as completed.
+
+**Format**
+```
+mark INDEX
+```
+
+---
+
+## unmark
+
+Marks a task as not done.
+
+**Format**
+```
+unmark INDEX
+```
+
+---
+
+## delete
+
+Deletes a task.
+
+**Format**
+```
+delete INDEX
+```
+
+---
+
+## find
+
+Finds tasks containing a keyword (case-insensitive).
+
+**Format**
+```
+find KEYWORD
+```
+
+---
+
+## bye
+
+Exits YXBot.
+
+**Format**
+```
+bye
+```
+
+---
+
+## Notes
+
+- Task numbering starts from **1**.
+- Tasks are automatically saved after modifications.
+- Invalid input will show an error message.
+- Duplicate tasks cannot be added
