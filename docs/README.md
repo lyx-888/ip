@@ -14,10 +14,9 @@ YXBot is a task manager chatbot that allows you to manage tasks efficiently usin
 ---
 
 ### Running the JAR File
-
-1. Download the `YXBot.jar` file.
-2. Open a terminal (Command Prompt / PowerShell / Terminal).
-3. Navigate to the folder containing the JAR file.
+- Download the `YXBot.jar` file. 
+- Open a terminal (Command Prompt / PowerShell / Terminal).
+- Navigate to the folder containing the JAR file.
 
 Example:
 
@@ -25,13 +24,13 @@ Example:
 cd path/to/your/jar/folder
 ```
 
-4. Run the following command:
+- Run the following command:
 
 ```
 java -jar YXBot.jar
 ```
 
-5. The YXBot GUI window will launch.
+- The YXBot GUI window will launch.
 
 ## Features
 
