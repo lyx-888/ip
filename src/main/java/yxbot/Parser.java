@@ -102,7 +102,7 @@ public class Parser {
         }
     }
 
-    private static Command parseTodo(String input) throws InvalidTodoFormatException {
+    private static Command parseTodo(String input) throws YXBotException {
         if (input.length() <= 4 || !input.startsWith("todo ")) {
             throw new InvalidTodoFormatException();
         }
@@ -111,10 +111,13 @@ public class Parser {
         if (description.isEmpty()) {
             throw new InvalidTodoFormatException();
         }
+
+        rejectPipe(description);
+
         return new Command(CommandType.TODO, new Todo(description));
     }
 
-    private static Command parseDeadline(String input) throws InvalidDeadlineFormatException {
+    private static Command parseDeadline(String input) throws YXBotException {
         if (!input.contains(" /by ")) {
             throw new InvalidDeadlineFormatException();
         }
@@ -130,6 +133,8 @@ public class Parser {
         if (description.isEmpty() || by.isEmpty()) {
             throw new InvalidDeadlineFormatException();
         }
+
+        rejectPipe(description);
 
         try {
             LocalDateTime.parse(by, DATE_INPUT_FORMAT);
@@ -164,6 +169,8 @@ public class Parser {
             throw new InvalidEventFormatException();
         }
 
+        rejectPipe(description);
+
         try {
             LocalDateTime dtFrom = LocalDateTime.parse(from, DATE_INPUT_FORMAT);
             LocalDateTime dtTo = LocalDateTime.parse(to, DATE_INPUT_FORMAT);
@@ -188,5 +195,11 @@ public class Parser {
         }
 
         return new FindCommand(keyword);
+    }
+
+    private static void rejectPipe(String text) throws YXBotException {
+        if (text.contains("|")) {
+            throw new YXBotException("Please don't use '|' in task descriptions.");
+        }
     }
 }

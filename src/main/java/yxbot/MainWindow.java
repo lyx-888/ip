@@ -61,6 +61,7 @@ public class MainWindow extends AnchorPane {
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
                 DialogBox.getYxbotDialog(response, yxbotImage)
+
         );
 
         userInput.clear();

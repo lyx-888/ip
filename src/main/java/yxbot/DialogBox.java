@@ -37,7 +37,6 @@ public class DialogBox extends HBox {
 
         dialog.setText(text);
         dialog.setWrapText(true);
-        dialog.setMaxWidth(300);
 
         displayPicture.setImage(img);
         displayPicture.setFitWidth(50.0);
@@ -46,23 +45,23 @@ public class DialogBox extends HBox {
         displayPicture.setClip(clip);
     }
 
-    /**
-     * Flips the dialog box such that the ImageView is on the left and text on the right.
-     */
     private void flip() {
         ObservableList<Node> tmp = FXCollections.observableArrayList(this.getChildren());
         Collections.reverse(tmp);
         getChildren().setAll(tmp);
-        setAlignment(Pos.TOP_LEFT);
-    }
-
-    public static DialogBox getUserDialog(String text, Image img) {
-        return new DialogBox(text, img);
     }
 
     public static DialogBox getYxbotDialog(String text, Image img) {
-        var db = new DialogBox(text, img);
-        db.flip();
+        DialogBox db = new DialogBox(text, img);
+        db.setAlignment(Pos.TOP_LEFT);
         return db;
     }
+
+    public static DialogBox getUserDialog(String text, Image img) {
+        DialogBox db = new DialogBox(text, img);
+        db.flip();
+        db.setAlignment(Pos.TOP_RIGHT);
+        return db;
+    }
+
 }
