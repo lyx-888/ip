@@ -20,6 +20,16 @@ public class Parser {
      * @throws YXBotException if input format is invalid
      */
     public static Command parse(String input) throws YXBotException {
+        if (input == null) {
+            throw new UnknownCommandException();
+        }
+
+        input = input.trim();
+
+        if (input.isEmpty()) {
+            throw new UnknownCommandException();
+        }
+
         String commandWord = input.contains(" ")
                 ? input.substring(0, input.indexOf(" "))
                 : input;

@@ -49,7 +49,7 @@ public class FindCommand extends Command {
                     System.out.println("Here are the matching tasks in your list:");
                 }
                 matchCount++;
-                System.out.println(matchCount + "." + task);
+                System.out.println((i + 1)+ "." + task);
             }
         }
 
