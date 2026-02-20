@@ -16,6 +16,19 @@ public class StorageTest {
     @TempDir
     Path tempDir;
 
+    /**
+     * Tests that when loading from a non-existent file, the storage creates the file
+     * and returns an empty task list.
+     *
+     * <p>This test verifies that:
+     * <ul>
+     *   <li>The file does not exist before the load operation</li>
+     *   <li>After calling {@code load()}, the method returns an empty ArrayList</li>
+     *   <li>The file is created automatically after the load operation</li>
+     * </ul>
+     *
+     * @throws Exception if an I/O error occurs during file operations
+     */
     @Test
     public void load_fileDoesNotExist_createsFileAndReturnsEmptyList() throws Exception {
         Path filePath = tempDir.resolve("data").resolve("tasks.txt");
