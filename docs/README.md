@@ -1,5 +1,7 @@
 # YXBot User Guide
 
+![UI Screenshot](docs/Ui.png)
+
 YXBot is a task manager chatbot that allows you to manage tasks efficiently using simple commands.
 
 ---
